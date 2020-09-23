@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { formatDate, isEmptyObject, validateEvent } from '../helpers/helpers';
+
+import Pikaday from 'pikaday';
+import 'pikaday/css/pikaday.css';
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -8,15 +12,26 @@ class EventForm extends React.Component {
         event: props.event,
         errors: {},
       };
-
+    this.dateInput = React.createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  componentDidMount() {
+    new Pikaday({
+      field: this.dateInput.current,
+      onSelect: (date) => {
+        const formattedDate = formatDate(date);
+        this.dateInput.current.value = formattedDate;
+        this.updateEvent('event_date', formattedDate);
+      },
+    });
   }
 
   handleSubmit(e) {
     e.preventDefault();
     const { event } = this.state;
-    const errors = this.validateEvent(event);
+    const errors = validateEvent(event);
     if (!this.isEmptyObject(errors)) {
       this.setState({ errors });
     } else {
@@ -24,32 +39,32 @@ class EventForm extends React.Component {
     }
   }
 
-  validateEvent(event) {
-    const errors = {};
+//   validateEvent(event) {
+//     const errors = {};
 
-    if (event.event_type === '') {
-      errors.event_type = 'You must enter an event type';
-    }
+//     if (event.event_type === '') {
+//       errors.event_type = 'You must enter an event type';
+//     }
 
-    if (event.event_date === '') {
-      errors.event_date = 'You must enter a valid date';
-    }
+//     if (event.event_date === '') {
+//       errors.event_date = 'You must enter a valid date';
+//     }
 
-    if (event.title === '') {
-      errors.title = 'You must enter a title';
-    }
+//     if (event.title === '') {
+//       errors.title = 'You must enter a title';
+//     }
 
-    if (event.speaker === '') {
-      errors.speaker = 'You must enter at least one speaker';
-    }
+//     if (event.speaker === '') {
+//       errors.speaker = 'You must enter at least one speaker';
+//     }
 
-    if (event.host === '') {
-      errors.host = 'You must enter at least one host';
-    }
+//     if (event.host === '') {
+//       errors.host = 'You must enter at least one host';
+//     }
 
-    console.log(event);
-    return errors;
-  }
+//     console.log(event);
+//     return errors;
+//   }
 
   isEmptyObject(obj) {
     return Object.keys(obj).length === 0;
@@ -59,14 +74,18 @@ class EventForm extends React.Component {
     const { target } = event;
     const { name } = target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
+    this.updateEvent(name, value);
+  }
 
+  updateEvent(key, value) {
     this.setState(prevState => ({
       event: {
         ...prevState.event,
-        [name]: value,
+        [key]: value,
       },
     }));
   }
+  
 
   renderErrors() {
     const { errors } = this.state;
@@ -102,10 +121,16 @@ class EventForm extends React.Component {
           </div>
           <div>
             <label htmlFor="event_date">
-              <strong>Date:</strong>
-              <input type="text" id="event_date" name="event_date" onChange={this.handleInputChange}/>
+                <strong>Date:</strong>
+                <input
+                type="text"
+                id="event_date"
+                name="event_date"
+                ref={this.dateInput}
+                autoComplete="off"
+                />
             </label>
-          </div>
+        </div>
           <div>
             <label htmlFor="title">
               <strong>Title:</strong>
