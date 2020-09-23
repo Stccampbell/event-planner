@@ -22,17 +22,17 @@ const Event = ({ event }) => (
             <li>
                 <strong>Title:</strong>
                 {' '}
-                {event.event_title}
+                {event.title}
             </li>
             <li>
                 <strong>Speaker:</strong>
                 {' '}
-                {event.event_speaker}
+                {event.speaker}
             </li>
             <li>
                 <strong>Host:</strong>
                 {' '}
-                {event.event_host}
+                {event.host}
             </li>
             <li>
                 <strong>Published:</strong>

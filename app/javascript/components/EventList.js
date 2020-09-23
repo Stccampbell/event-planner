@@ -23,7 +23,12 @@ class EventList extends Component {
     render() {
         return (
             <section>
-                <h2>Events</h2>
+                <h2>
+                    Events
+                </h2>
+                <h3>
+                <Link to="/events/new">New Event</Link>
+                </h3>
                 <ul>{this.renderEvents()}</ul>
             </section>
         );
