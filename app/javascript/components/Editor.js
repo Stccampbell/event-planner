@@ -14,7 +14,10 @@ class Editor extends Component {
     componentDidMount() {
         axios
             .get('/api/events.json')
-            .then(res => this.setState({ events: Response.data }))
+            .then((res) => {
+                console.log(res)
+                this.setState({ events: res.data })
+            })
             .catch((error) => {
                 console.log(error);
             });
