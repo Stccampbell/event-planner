@@ -1,5 +1,7 @@
 export const isEmptyObject = obj => Object.keys(obj).length === 0;
 
+const isValidDate = dateObj => !Number.isNaN(Date.parse(dateObj));
+
 export const validateEvent = (event) => {
   const errors = {};
 
@@ -10,6 +12,11 @@ export const validateEvent = (event) => {
   if (event.event_date === '') {
     errors.event_date = 'You must enter a valid date';
   }
+
+  if (!isValidDate(event.event_date)) {
+    errors.event_date = 'You must enter a valid date';
+  }
+
 
   if (event.title === '') {
     errors.title = 'You must enter a title';
